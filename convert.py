@@ -8,6 +8,7 @@ import os.path
 import moviepy.editor as mpy
 import requests
 import shutil
+import hashlib
 from hashids import Hashids
 from goldfinch import validFileName as vfn
 
@@ -34,7 +35,8 @@ def filename_from_url(url):
     ''' Converts a url into a friendlier file name'''
 
     # return 'cache/' + re.sub(r'://|/', '_', url)
-    return 'cache/' + vfn(url)
+    # convert to hash (md5) to avoid looooongcat urls causing FS failures if filename is 'too long' (255 chars is not uncommon)
+    return 'cache/' + hashlib.md5(vfn(url)).hexdigest()
 
 
 def download_video(url):
